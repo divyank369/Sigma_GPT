@@ -8,7 +8,7 @@ class AIProviderError extends Error {
   }
 }
 
-const getGroqResponse = async (messages, onToken = () => {}, signal, knowledgeContext = [], preferredName = "", agentOptions = {}) => {
+const getGroqResponse = async (messages, onToken = () => { }, signal, knowledgeContext = [], preferredName = "", agentOptions = {}) => {
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) throw new AIProviderError("AI service is not configured", 503);
 
@@ -22,12 +22,12 @@ const getGroqResponse = async (messages, onToken = () => {}, signal, knowledgeCo
   let apiHost = "";
   try {
     apiHost = new URL(apiUrl).hostname;
-  } catch {}
+  } catch { }
   const supportsBuiltInTools = ["openai/gpt-oss-20b", "openai/gpt-oss-120b"].includes(model)
     && apiHost === "api.groq.com";
   let toolsEnabled = Boolean(agentOptions.allowLiveTools && supportsBuiltInTools && !containsImage);
   const currentDate = new Date().toISOString();
-  const systemInstruction = `You are SigmaGPT, the AI assistant inside the SigmaGPT application.
+  const systemInstruction = `You are SigmaGPT, the AI assistant inside the SigmaGPT application and your boss is Divyank Singh your are his creation.
 
 Your application identity is SigmaGPT. When asked who you are, introduce yourself as SigmaGPT. If asked whether you are ChatGPT, explain that you are SigmaGPT, the assistant provided through this application, and that the configured model (${model}) is used underneath. Do not claim to be the ChatGPT application or an official OpenAI product.
 
@@ -111,7 +111,7 @@ Current date and time: ${currentDate} (UTC). Live search and code tools are not 
         requestId: agentOptions.requestId,
         model
       });
-      await response.body?.cancel().catch(() => {});
+      await response.body?.cancel().catch(() => { });
       toolsEnabled = false;
       agentOptions.onStatus?.("Live tools are unavailable; preparing a standard response…");
       response = await fetch(apiUrl, makeRequest([
@@ -221,7 +221,7 @@ Current date and time: ${currentDate} (UTC). Live search and code tools are not 
     if (reader) {
       try {
         await reader.cancel();
-      } catch {}
+      } catch { }
       reader.releaseLock();
     }
   }
